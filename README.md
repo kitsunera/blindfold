@@ -6,14 +6,23 @@
 A keyboard, a mouse, internet, and [python](https://www.python.org/downloads/)
 ## how to use:
 After downloading the script, go to the directory of the file and run
-```bash
+```
 sudo python blindfold.py
 ```
 
-This will automatically set up iptables rules to drop ICMP packets, and change the kernel's ipv4 configuration to ignore ARP packets, making you esentially invisible to typical scanners, thus making you immune to man-in-the-middle attacks, and/or other types of reconaissance.
+This will automatically set up iptables rules to drop ICMP packets, and change the kernel's IPv4 configuration to ignore ARP packets, making you esentially invisible to typical scanners, thus making you immune to man-in-the-middle attacks, and/or other types of reconaissance.
+### Note: some people may experience internet issues because of the ICMP blocker. If you are affected by this, only run the ARP blocker.
+```
+sudo python blindfold.py --only-arp
+```
+vice versa as well, if you only want to run the ICMP blocker, while keeping ARP responses unaffected (NOT RECOMMENDED)
+```
+sudo python blindfold.py --only-icmp
+```
+
 
 **to revert the changes, simply run:**
-```bash
+```
 sudo python blindfold.py --revert
 ```
 this will automatically restore and make your device public in the network.
@@ -21,7 +30,7 @@ this will automatically restore and make your device public in the network.
 ## additional arguments
 these are some additional arguments you can use, to allow more configuration on the network.
 
-```bash
+```
 sudo python blindfold.py --save # saves your configuration persistently
 # to block all requests, even after reboots.
 ```
