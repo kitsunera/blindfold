@@ -15,7 +15,7 @@ This will automatically set up iptables rules to drop ICMP packets, and change t
 ```
 sudo python blindfold.py --only-arp
 ```
-vice versa as well, if you only want to run the ICMP blocker, while keeping ARP responses unaffected (NOT RECOMMENDED)
+vice versa as well, if you only want to run the ICMP blocker, while keeping ARP responses unaffected **(NOT RECOMMENDED)**
 ```
 sudo python blindfold.py --only-icmp
 ```
