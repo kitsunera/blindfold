@@ -133,7 +133,16 @@ def main():
         action="store_true", 
         help="Save iptables rules to persist after reboot"
     )
-
+    parser.add_argument(
+        "--only-arp",
+        action="store_true",
+        help="Only apply changes to ARP settings"
+    )
+    parser.add_argument(
+        "--only-icmp",
+        action="store_true",
+        help="Only apply changes to ICMP settings"
+    )
     args = parser.parse_args()
 
     check_root()
@@ -152,33 +161,40 @@ def main():
 ┣┓┃┓┏┓┏┫╋┏┓┃┏┫
 ┗┛┗┗┛┗┗┻┛┗┛┗┗┻
 enabling ARP responses for interfaces:\n{' / '.join(interfaces)}""")
-        for iface in interfaces:
-            if enable_arp(iface):
-                print(f"| ARP enabled for {iface}")
+
+        if not args.only_icmp:
+            for iface in interfaces:
+                if enable_arp(iface):
+                    print(f"| ARP enabled for {iface}")
+                else:
+                    print(color_text(f"error: failed to enable ARP for {iface} :(", "red"))
+
+        if not args.only_arp:
+            print("enabling ICMP responses...")
+            if enable_icmp():
+                print("| ICMP responses enabled")
             else:
-                print(color_text(f"error: failed to enable ARP for {iface} :(", "red"))
-                
-        print("enabling ICMP responses...")
-        if enable_icmp():
-            print("| ICMP responses enabled")
-        else:
-            print(color_text("error: failed to enable ICMP responses :(", "red"))
+                print(color_text("error: failed to enable ICMP responses :(", "red"))
+
     else:
         print(f"""by kvts 
 ┓ ┓•   ┓┏  ┓ ┓
 ┣┓┃┓┏┓┏┫╋┏┓┃┏┫
 ┗┛┗┗┛┗┗┻┛┗┛┗┗┻
 disabling ARP/ICMP for interfaces:\n{' / '.join(interfaces)}""")
-        for iface in interfaces:
-            if disable_arp(iface):
-                print(f"| ARP disabled for {iface}")
+
+        if not args.only_icmp:
+            for iface in interfaces:
+                if disable_arp(iface):
+                    print(f"| ARP disabled for {iface}")
+                else:
+                    print(color_text(f"error: failed to disable ARP for {iface}", "red"))
+
+        if not args.only_arp:
+            if disable_icmp():
+                print("| ICMP responses disabled")
             else:
-                print(color_text(f"error: failed to disable ARP for {iface}", "red"))
-    
-        if disable_icmp():
-            print("| ICMP responses disabled")
-        else:
-            print(color_text("error: failed to disable ICMP responses :(", "red"))
+                print(color_text("error: failed to disable ICMP responses :(", "red"))
 
     if args.save:
         save_firewall_rules()
