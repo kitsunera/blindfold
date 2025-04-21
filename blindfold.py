@@ -1,5 +1,5 @@
 """blindfold: An automatic linux firewall configurator for invisibility against LAN scanners.
-by senka"""
+by kitsunera"""
 
 import argparse
 import subprocess
